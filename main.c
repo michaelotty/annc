@@ -38,8 +38,8 @@ int main (int argc, char **argv)
   ////////////////////////////////// Set up inputs/outputs //////////////////////////////////
   float inputs[NUM_TRAINING][NUM_INPUTS] = {{1, 0, 0}, {0, 1, 0}, {0, 0, 1}}; //the 3 possible inputs ABC
   float outputs[NUM_TRAINING][NUM_OUTPUTS] = {{0, 1, 0}, {0, 0, 1}, {1, 0, 0}}; //the corresponding outputs BCA
-  float learningrate = 0.01; //learning rate
-  int iterations = 1000; //iterations
+  float learningrate = 2.5; //learning rate
+  int iterations = 200000; //iterations
   int debug = 1; //0 for now debugging, 1 for the loss each iteration, 2 for all vectors/matrices each iteration
   ////////////////////////////////// Initialise weights //////////////////////////////////
   float Wxh[NUM_INPUTS+1][NUM_HIDDEN]; //weights between inputs x and hidden nodes, including an extra one for bias
