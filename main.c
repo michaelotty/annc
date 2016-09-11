@@ -36,15 +36,15 @@ void displayVectorOrMatrix (const char *label, float *m, int rows, int cols)
 int main (int argc, char **argv)
 {
   ////////////////////////////////// Set up inputs/outputs //////////////////////////////////
+  int t, i, h, o; //looping variables for iterations, input nodes, hidden nodes, output nodes
   float inputs[NUM_TRAINING][NUM_INPUTS] = {{1, 0, 0}, {0, 1, 0}, {0, 0, 1}}; //the 3 possible inputs ABC
   float outputs[NUM_TRAINING][NUM_OUTPUTS] = {{0, 1, 0}, {0, 0, 1}, {1, 0, 0}}; //the corresponding outputs BCA
   float learningrate = 2.5; //learning rate
   int iterations = 200000; //iterations
-  int debug = 1; //0 for now debugging, 1 for the loss each iteration, 2 for all vectors/matrices each iteration
+  int debug = argc - 1; //0 for now debugging, 1 for the loss each iteration, 2 for all vectors/matrices each iteration
   ////////////////////////////////// Initialise weights //////////////////////////////////
   float Wxh[NUM_INPUTS+1][NUM_HIDDEN]; //weights between inputs x and hidden nodes, including an extra one for bias
   float Why[NUM_HIDDEN+1][NUM_OUTPUTS]; //weights between hidden nodes and output y, including an extra one for bias
-  int t, i, h, o; //looping variables for iterations, input nodes, hidden nodes, output nodes
   for (i=0; i<NUM_INPUTS+1; i++)
   {
     for (h=0; h<NUM_HIDDEN; h++)
@@ -183,6 +183,7 @@ int main (int argc, char **argv)
     }
 
     ////////////////////////////////// Back pass //////////////////////////////////
+
     //Multiply h*e to get the adjustments to deltaWhy
     for (h=0; h<NUM_HIDDEN+1; h++)
     {
@@ -216,6 +217,7 @@ int main (int argc, char **argv)
     {
       zhWeightedSums[h] = hActivationValues[h+1] * (1 - powf (tanhf (zhWeightedSums[h]), 2)); //apply activation function gradient
     }
+
     if (debug>=2)
     {
       displayVectorOrMatrix ("hidden weighted sums after gradient", zhWeightedSums, NUM_HIDDEN, 1);
@@ -225,15 +227,16 @@ int main (int argc, char **argv)
     for (i=0; i<NUM_INPUTS+1; i++)
     {
       for (h=0; h<NUM_HIDDEN; h++)
-        {
+      {
           deltaWxh[i][h] = x[i] * zhWeightedSums[h];
-        }
       }
+    }
 
-      if (debug>=2)
+    if (debug>=2)
     {
       displayVectorOrMatrix ("input/hidden weights gradient", (float*)deltaWxh, NUM_INPUTS+1, NUM_HIDDEN);
     }
+
     ////////////////////////////////// Now add in the adjustments //////////////////////////////////
     for (h=0; h<NUM_HIDDEN+1; h++)
     {
@@ -251,6 +254,7 @@ int main (int argc, char **argv)
       }
     }
   }
+
   //Output weights and last input/output and predicted output
   displayVectorOrMatrix ("input/hidden weights", (float*)Wxh, NUM_INPUTS+1, NUM_HIDDEN);
   displayVectorOrMatrix ("hidden/output weights", (float*)Why, NUM_HIDDEN+1, NUM_OUTPUTS);
